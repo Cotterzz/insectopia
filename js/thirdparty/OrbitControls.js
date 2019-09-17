@@ -372,11 +372,16 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 			scale /= dollyScale;
 
+
 		} else if ( scope.object.isOrthographicCamera ) {
+
+
 
 			scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom * dollyScale ) );
 			scope.object.updateProjectionMatrix();
 			zoomChanged = true;
+
+			global.shaderLayer.scaleChange(scope.object.zoom);
 
 		} else {
 
@@ -398,6 +403,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 			scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom / dollyScale ) );
 			scope.object.updateProjectionMatrix();
 			zoomChanged = true;
+
+			global.shaderLayer.scaleChange(scope.object.zoom);
 
 		} else {
 

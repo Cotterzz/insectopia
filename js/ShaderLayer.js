@@ -47,7 +47,8 @@ class ShaderLayer extends THREE.Object3D{
                 u_resolution: { type: "v2", value: new THREE.Vector2() },
                 u_mouse: { type: "v2", value: new THREE.Vector2() },
                 u_tiles: { type: "t", value: this.loadedTexture1 },
-                u_tilemap: { type: "t", value:this.loadedTexture2 }
+                u_tilemap: { type: "t", value:this.loadedTexture2 },
+                u_scale: { type: "f", value: 1.0 }
         };
         this.resize(window.innerWidth, window.innerHeight);
         this.material = new THREE.ShaderMaterial( {
@@ -61,6 +62,7 @@ class ShaderLayer extends THREE.Object3D{
                 uniform vec2 u_resolution;
                 uniform vec2 u_mouse;
         		uniform float u_time;
+        		uniform float u_scale;
 
         		uniform sampler2D u_tiles;
         		uniform sampler2D u_tilemap;
@@ -77,14 +79,14 @@ class ShaderLayer extends THREE.Object3D{
         			//float bgoffsetx = 0.00;
         			//float bgoffsety = 0.00;
 
-        			offsetx = u_mouse.x;
-        			offsety = u_mouse.y;
+        			offsetx = u_mouse.x*2.00;
+        			offsety = u_mouse.y*2.00;
 
         			//bgoffsetx = u_mouse.x*2.00;
         			//bgoffsety = u_mouse.y*2.00;
 
-        			float tilex = (gl_FragCoord.x+offsetx)/16384.00;
-        			float tiley = (gl_FragCoord.y+offsety)/16384.00;
+        			float tilex = (gl_FragCoord.x+offsetx)/16384.00*u_scale;
+        			float tiley = (gl_FragCoord.y+offsety)/16384.00*u_scale;
 
         			//float bgtilex = (gl_FragCoord.x+bgoffsetx)/8172.00;
         			//float bgtiley = (gl_FragCoord.y+bgoffsety)/8172.00;
@@ -101,8 +103,10 @@ class ShaderLayer extends THREE.Object3D{
 
         			if(tile.r<0.5) discard;
 
-					float fracx = floor(mod(gl_FragCoord.x+offsetx, 64.00));
-					float fracy = floor(mod(gl_FragCoord.y+offsety, 64.00));
+					float fracx = floor(mod((gl_FragCoord.x+offsetx)*u_scale, 64.00));
+					float fracy = floor(mod((gl_FragCoord.y+offsety)*u_scale, 64.00));
+					//if(fracx>62.00) { fracx = 62.00; }
+					//if(fracx<2.00) { fracx = 2.00; }
 
 					//float bgfracx = floor(mod(gl_FragCoord.x+bgoffsetx, 64.00));
 					//float bgfracy = floor(mod(gl_FragCoord.y+bgoffsety, 64.00));
@@ -123,6 +127,13 @@ class ShaderLayer extends THREE.Object3D{
     	} );
         this.mesh = new THREE.Mesh( this.geometry, this.material );
         this.add( this.mesh );
+	}
+
+	scaleChange(scale){
+		if(this.loaded){
+			this.uniforms.u_scale.value = 1/scale;
+			screenLog.update("scaleChange", this.uniforms.u_scale.value);
+		}
 	}
 
 	update(){
