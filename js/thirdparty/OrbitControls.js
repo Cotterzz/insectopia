@@ -381,7 +381,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 			scope.object.updateProjectionMatrix();
 			zoomChanged = true;
 
-			global.shaderLayer.scaleChange(scope.object.zoom);
+			if(global.shaderlayeron){global.shaderLayer.scaleChange(scope.object.zoom);}
 
 		} else {
 
@@ -404,7 +404,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 			scope.object.updateProjectionMatrix();
 			zoomChanged = true;
 
-			global.shaderLayer.scaleChange(scope.object.zoom);
+			if(global.shaderlayeron){global.shaderLayer.scaleChange(scope.object.zoom);}
 
 		} else {
 
