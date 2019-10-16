@@ -1,12 +1,15 @@
 window.global = new Global();
 screenLog.init();
-global.gl = document.querySelector('canvas').getContext('webgl');
-global.bench = new GLBench(global.gl);
+//global.gl = document.querySelector('canvas').getContext('webgl');
+//g/lobal.bench = new GLBench(global.gl);
 var viewport = new ViewPort();
 viewport.addEventListener("enterframe", enterframe);
 viewport.addEventListener("resize", resize);
 document.addEventListener('keydown', logKey);
 
+global.bench = new GLBench(viewport.renderer.getContext());
+
+//global.bench.newFrame();
 
 global.shaderlayeron = true;
 var ladyBug = new LadyBug(20,32,"#ff0000", "#000000", "#111155");

@@ -3,7 +3,7 @@ class ViewPort extends THREE.Object3D{
         super();
         this.scene = new THREE.Scene();
         //this.container = document.getElementById("container");
-        this.renderer = new THREE.WebGLRenderer({canvas:document.getElementById("canvas3d"),antialias:false});
+        this.renderer = new THREE.WebGLRenderer({canvas:document.getElementById("canvas3d"),antialias:true});
 
         //document.getElementById("canvas3d").style = 'transform: rotate(90deg)';
         this.renderer.physicallyCorrectLights = true;
@@ -84,11 +84,16 @@ class ViewPort extends THREE.Object3D{
 	vranimate(){ this.renderer.setAnimationLoop( () => { this.render() } )} // in VR mode, this is called once, and render is called every frame
 
     render(){ // this is called every frame, in both VR and standard mode, and the code is shared by both
-        global.bench.begin('render');
+
+
+
+        if(global.bench){global.bench.begin("tag")}
         
 
         this.renderer.render(this.scene, this.camera);
         this.dispatchEvent({ type: "enterframe" });
-        global.bench.end('render');
+        if(global.bench){global.bench.end("tag")};
+
+        if(global.bench){global.bench.nextFrame()};
     }
 }
